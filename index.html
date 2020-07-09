@@ -8,11 +8,39 @@
 
 <!-- Temp Code -->
 <script>
+	// initialization
 myEngine = new BattleEngine();
 Boss = new Combatant('Boss',6,4);
 Boss.setArmorClass(10);
 myEngine.addOpponent(Boss);
 
+function includeHTML() {
+	var z, i, elmnt, file, xhttp;
+	/* Loop through a collection of all HTML elements: */
+	z = document.getElementsByTagName("*");
+	for (i = 0; i < z.length; i++) {
+		elmnt = z[i];
+		/*search for elements with a certain atrribute:*/
+		file = elmnt.getAttribute("w3-include-html");
+		if (file) {
+			/* Make an HTTP request using the attribute value as the file name: */
+			xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function() {
+				if (this.readyState == 4) {
+					if (this.status == 200) {elmnt.innerHTML = this.responseText;}
+					if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
+					/* Remove the attribute, and call this function once more: */
+					elmnt.removeAttribute("w3-include-html");
+					includeHTML();
+				}
+			}
+			xhttp.open("GET", file, true);
+			xhttp.send();
+			/* Exit the function: */
+			return;
+		}
+	}
+}
 
 //collapse/expand accordian
 function toggleAccordian(id) {
@@ -157,7 +185,6 @@ function getAttackHTML(charindex)
 </script>
 
 <body>
-
 <!-- Header -->
 <header class="w3-container w3-theme w3-padding" id="myHeader">
   <div class="w3-center">
@@ -219,77 +246,8 @@ function getAttackHTML(charindex)
   </div>
 </div>
 
-<!-- Add to Party Form --> 
-<div class="w3-container">
-  <div id="addPartyForm" class="w3-modal">
-    <div class="w3-modal-content w3-card-4">
-      <div class="w3-container">
-        <span onclick="document.getElementById('addPartyForm').style.display='none'" class="w3-button w3-display-topright">&times;</span>
-		<p>&nbsp;</p>
-		<div class="w3-panel w3-blue-gray" align=center>
-		  <p>New Character</p>
-		</div>
-		<!-- char name -->
-		<div class="w3-row-padding">
-		  <div class="w3-half">
-		    <label>Character Name</label>
-		  </div>
-		  <div class="w3-half">
-		    <input class="w3-input" type="text" id="combatant_name">
-		  </div>
-		</div>
-		<!-- hit and damage modifiers -->
-		<div class="w3-row-padding">
-		  <div class="w3-quarter" align>
-		    <label>Hit Modifier</label>
-		  </div>
-		  <div class="w3-quarter">
-		    <input class="w3-input" type="text" id="hit_modifier">
-		  </div>
-		  <div class="w3-quarter">
-		    <label>Dmg Modifier</label>
-		  </div>
-		  <div class="w3-quarter">
-		    <input class="w3-input" type="text" id="damage_modifier">
-		  </div>
-		</div>
-		<!-- advantage -->
-		<div class="w3-row-padding">
-		  <div class="w3-quarter" align>
-		    <label>Advantage Chance (0-1)</label>
-		  </div>
-		  <div class="w3-quarter">
-		    <input class="w3-input" type="text" id="advantage_chance">
-		  </div>
-		  <div class="w3-quarter">
-		    <label>Advantage Dice</label>
-		  </div>
-		  <div class="w3-quarter">
-		    <input class="w3-input" type="text" id="advantage_dice" value="2">
-		  </div>
-		</div>
-		<!-- extra damage -->
-		<div class="w3-row-padding">
-		  <div class="w3-quarter" align>
-		    <label>Extra Damage Chance (0-1)</label>
-		  </div>
-		  <div class="w3-quarter">
-		    <input class="w3-input" type="text" id="extra_damage_chance">
-		  </div>
-		  <div class="w3-quarter">
-		    <label>Average Extra Damage (hex, backstab)</label>
-		  </div>
-		  <div class="w3-quarter">
-		    <input class="w3-input" type="text" id="extra_damage">
-		  </div>
-		</div>
-		<div class="w3-panel" align=center>
-		  <button onClick="addCombatant()" class="w3-button w3-round-large w3-dark-gray">Add Character</button>
-        </div>
-	  </div>
-    </div>
-  </div>
-</div>
+<!-- Add to Party Form -->
+<div w3-include-html="character_form.html"></div>
 
 <!-- Footer -->
 <footer class="w3-container w3-theme-dark w3-padding-16">
@@ -301,5 +259,8 @@ function getAttackHTML(charindex)
     <i class="fa fa-chevron-circle-up"></i></span></a>
   </div>
  </footer>
+<script>
+	includeHTML();
+</script>
 </body>
 </html>
