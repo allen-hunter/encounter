@@ -4,71 +4,56 @@
 
 // BattleEngine is a serializeable object
 // that contains all of the non-gui logic of the encouner builder
-class BattleEngine
-{
-	constructor()
-    {
-		this.theParty = new Party();
-		this.theEnemies = new Party();
-		this.currentChar = -1; //index of selected character
-		this.currentEnemy = -1; //index of selected enemy
-	}
-	
-	addPartyMember(character)
-	{
-		this.theParty.addMember(character);
-		if(this.currentChar < 1)
-		{
-			this.currentCar = 0;
-		}
-	}
-	
-	addOpponent(character)
-	{
-		this.theEnemies.addMember(character);
-		if(this.currentEnemy < 0)
-		{
-			this.currentEnemy = 0;
-		}
-	}
+class BattleEngine {
+    constructor() {
+        this.theParty = new Party();
+        this.theEnemies = new Party();
+        this.currentChar = -1; //index of selected character
+        this.currentEnemy = -1; //index of selected enemy
+    }
+
+    addPartyMember(character) {
+        this.theParty.addMember(character);
+        if (this.currentChar < 1) {
+            this.currentCar = 0;
+        }
+    }
+
+    addOpponent(character) {
+        this.theEnemies.addMember(character);
+        if (this.currentEnemy < 0) {
+            this.currentEnemy = 0;
+        }
+    }
 }
 
-class Party
-{
-    constructor()
-    {
+class Party {
+    constructor() {
         this.members = new Array();
     }
 
-    addMember(character)
-    {
+    addMember(character) {
         this.members.push(character);
     }
 
-    setOpponent(opponent)
-    {
-        for (var index = 0; index < this.members.length; index++)
-        {
+    setOpponent(opponent) {
+        for (var index = 0; index < this.members.length; index++) {
             this.members[index].setOpponent(opponent);
         }
     }
 
-    getAvgDamage()
-    {
+    getAvgDamage() {
         var totalDamage = 0;
-        for (var index = 0; index < this.members.length; index++)
-        {
+        for (var index = 0; index < this.members.length; index++) {
             totalDamage += this.members[index].getAvgDamage();
         }
         return totalDamage;
     }
 }
 
-class Combatant
-{
-    constructor(name, bonusToHit, bonusDamage)
-    {
-		this.name = name;
+class Combatant {
+    constructor(name, bonusToHit, bonusDamage) {
+        this.name = name;
         this.bonusToHit = bonusToHit;
         this.bonusDamage = bonusDamage;
         this.attacks = new Array();
@@ -78,87 +63,74 @@ class Combatant
         this.extraDamagePercent = 0;
     }
 
-    addAttack(name, minDamage, maxDamage)
-    {
+    addAttack(name, minDamage, maxDamage) {
         this.attacks.push(new Attack(this, name, minDamage, maxDamage));
     }
 
-    setArmorClass(armorClass)
-    {
+    setArmorClass(armorClass) {
         this.armorClass = armorClass;
     }
 
-    setAdvantageChance(chance)
-    {
+    setAdvantageChance(chance) {
         this.advantageChance = chance;
     }
 
-    setAdvantageDice(dice)
-    {
+    setAdvantageDice(dice) {
         this.advantageDice = dice;
     }
 
-    setOpponent(opponent)
-    {
+    setOpponent(opponent) {
         this.opponent = opponent;
     }
 
-    setExtraDamage(amount, percent)
-    {
+    setExtraDamage(amount, percent) {
         this.extraDamage = amount;
         this.extraDamagePercent = percent;
     }
 
-    getExtraDamage()
-    {
+    getExtraDamage() {
         return this.extraDamage * this.extraDamagePercent;
     }
 
-    getAvgDamage()
-    {
+    getAvgDamage() {
         var totalDamage = 0;
-        for (var index = 0; index < this.attacks.length; index++)
-        {
+        for (var index = 0; index < this.attacks.length; index++) {
             totalDamage += this.attacks[index].getAvgDamage();
         }
         return totalDamage;
     }
 }
 
-class Attack
-{
-    constructor(owner, name, minDamage, maxDamage)
-    {
+class Attack {
+    constructor(owner, name, minDamage, maxDamage) {
         this.owner = owner;
-		this.name = name;
+        this.name = name;
         this.minDamage = minDamage;
         this.maxDamage = maxDamage;
     }
-    getAvgDamage()
-    {
-        var avgDmg = (this.minDamage + this.maxDamage)/2;
+
+    getAvgDamage() {
+        var avgDmg = (this.minDamage + this.maxDamage) / 2;
         avgDmg += this.owner.getExtraDamage();
         avgDmg += this.owner.bonusDamage;
         var targetToHit = this.owner.opponent.armorClass - this.owner.bonusToHit;
         var advantageEffect = CalculateAdvBonus(this.owner.advantageDice, targetToHit)
         advantageEffect *= this.owner.advantageChance;
         targetToHit -= advantageEffect;
-        var percentHit = CalculateAdvantage(1,targetToHit)
+        var percentHit = CalculateAdvantage(1, targetToHit)
         return avgDmg * percentHit;
     }
 }
 
-function CalculateAdvBonus(numDice, DC)
-{
-    var pNormal = (21-DC)/20;
-    var pAdv = 1- Math.pow(1-pNormal,numDice);
-    return 100 * (pAdv-pNormal) /5;
+function CalculateAdvBonus(numDice, DC) {
+    var pNormal = (21 - DC) / 20;
+    var pAdv = 1 - Math.pow(1 - pNormal, numDice);
+    return 100 * (pAdv - pNormal) / 5;
 }
 
-function CalculateAdvantage(numDice,DC)
-{
-    var pNormal = (21-DC)/20;
-    var pAdv = 1- Math.pow(1-pNormal,numDice);
+function CalculateAdvantage(numDice, DC) {
+    var pNormal = (21 - DC) / 20;
+    var pAdv = 1 - Math.pow(1 - pNormal, numDice);
     return pAdv;
 }
 

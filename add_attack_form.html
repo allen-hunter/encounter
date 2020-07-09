@@ -1,0 +1,39 @@
+<div id="addAttackForm" class="w3-modal">
+    <div class="w3-modal-content w3-card-4">
+        <div class="w3-container">
+      <span onclick="document.getElementById('addAttackForm').style.display='none'"
+            class="w3-button w3-display-topright">&times;</span>
+            <p>&nbsp;</p>
+            <div class="w3-panel w3-blue-gray" align=center>
+                <p>New Attack</p>
+            </div>
+            <!-- attack name-->
+            <div class="w3-row-padding">
+                <div class="w3-half">
+                    <label>Attack Name</label>
+                </div>
+                <div class="w3-half">
+                    <input class="w3-input" type="text" id="attack_name">
+                </div>
+            </div>
+            <!-- damage -->
+            <div class="w3-row-padding">
+                <div class="w3-quarter">
+                    <label>Min Dmg</label>
+                </div>
+                <div class="w3-quarter">
+                    <input class="w3-input" type="text" id="atk_min_dmg">
+                </div>
+                <div class="w3-quarter">
+                    <label>Max Dmg</label>
+                </div>
+                <div class="w3-quarter">
+                    <input class="w3-input" type="text" id="atk_max_dmg">
+                </div>
+            </div>
+            <div class="w3-panel" align=center>
+                <button onClick="createAttack()" class="w3-button w3-round-large w3-dark-gray">Add Attack</button>
+            </div>
+        </div>
+    </div>
+</div>

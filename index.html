@@ -8,259 +8,215 @@
 
 <!-- Temp Code -->
 <script>
-	// initialization
-myEngine = new BattleEngine();
-Boss = new Combatant('Boss',6,4);
-Boss.setArmorClass(10);
-myEngine.addOpponent(Boss);
+    // initialization
+    myEngine = new BattleEngine();
+    Boss = new Combatant('Boss', 6, 4);
+    Boss.setArmorClass(10);
+    myEngine.addOpponent(Boss);
 
-function includeHTML() {
-	var z, i, elmnt, file, xhttp;
-	/* Loop through a collection of all HTML elements: */
-	z = document.getElementsByTagName("*");
-	for (i = 0; i < z.length; i++) {
-		elmnt = z[i];
-		/*search for elements with a certain atrribute:*/
-		file = elmnt.getAttribute("w3-include-html");
-		if (file) {
-			/* Make an HTTP request using the attribute value as the file name: */
-			xhttp = new XMLHttpRequest();
-			xhttp.onreadystatechange = function() {
-				if (this.readyState == 4) {
-					if (this.status == 200) {elmnt.innerHTML = this.responseText;}
-					if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
-					/* Remove the attribute, and call this function once more: */
-					elmnt.removeAttribute("w3-include-html");
-					includeHTML();
-				}
-			}
-			xhttp.open("GET", file, true);
-			xhttp.send();
-			/* Exit the function: */
-			return;
-		}
-	}
-}
+    function includeHTML() {
+        var z, i, elmnt, file, xhttp;
+        /* Loop through a collection of all HTML elements: */
+        z = document.getElementsByTagName("*");
+        for (i = 0; i < z.length; i++) {
+            elmnt = z[i];
+            /*search for elements with a certain atrribute:*/
+            file = elmnt.getAttribute("w3-include-html");
+            if (file) {
+                /* Make an HTTP request using the attribute value as the file name: */
+                xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function () {
+                    if (this.readyState == 4) {
+                        if (this.status == 200) {
+                            elmnt.innerHTML = this.responseText;
+                        }
+                        if (this.status == 404) {
+                            elmnt.innerHTML = "Page not found.";
+                        }
+                        /* Remove the attribute, and call this function once more: */
+                        elmnt.removeAttribute("w3-include-html");
+                        includeHTML();
+                    }
+                }
+                xhttp.open("GET", file, true);
+                xhttp.send();
+                /* Exit the function: */
+                return;
+            }
+        }
+    }
 
-//collapse/expand accordian
-function toggleAccordian(id) {
-  var x = document.getElementById(id);
-  if (x.className.indexOf("w3-show") == -1) {
-    x.className += " w3-show";
-  } else {
-    x.className = x.className.replace(" w3-show", "");
-  }
-}
+    //collapse/expand accordian
+    function toggleAccordian(id) {
+        var x = document.getElementById(id);
+        if (x.className.indexOf("w3-show") == -1) {
+            x.className += " w3-show";
+        } else {
+            x.className = x.className.replace(" w3-show", "");
+        }
+    }
 
-function addCombatant()
-{
-	// get variables
-	var charname = document.getElementById('combatant_name').value;
-	var hitmod = document.getElementById('hit_modifier').value;
-	var dmgmod = document.getElementById('damage_modifier').value;
-	var advChance = document.getElementById('advantage_chance').value;
-	var advDice = document.getElementById('advantage_dice').value;
-	var extraDmg = document.getElementById('extra_damage').value;
-	var extraDmgChance = document.getElementById('extra_damage_chance').value;
-	// validate inputs
-	var bPass = true;
-	if(charname.length < 1)
-	{
-		complain(1,"character name is required");
-		bPass = false;
-	}
-	if(!bPass)
-	{
-		return;
-	}
-	// create combatant
-	// add to UI
-	console.log(charname);
-	newchar = new Combatant(charname,hitmod,dmgmod);
-	newchar.setAdvantageChance(advChance);
-	newchar.setAdvantageDice(advDice);
-	//newchar.setExtraDamage(10,1);
-	newchar.setExtraDamage(extraDmg,extraDmgChance);
-	myEngine.addPartyMember(newchar);
-	myEngine.theParty.setOpponent(Boss);
-	drawParty();
-	document.getElementById('addPartyForm').style.display='none'
-}
+    function addCombatant() {
+        // get variables
+        var charname = document.getElementById('combatant_name').value;
+        var hitmod = document.getElementById('hit_modifier').value;
+        var dmgmod = document.getElementById('damage_modifier').value;
+        var advChance = document.getElementById('advantage_chance').value;
+        var advDice = document.getElementById('advantage_dice').value;
+        var extraDmg = document.getElementById('extra_damage').value;
+        var extraDmgChance = document.getElementById('extra_damage_chance').value;
+        // validate inputs
+        var bPass = true;
+        if (charname.length < 1) {
+            complain(1, "character name is required");
+            bPass = false;
+        }
+        if (!bPass) {
+            return;
+        }
+        // create combatant
+        // add to UI
+        console.log(charname);
+        newchar = new Combatant(charname, hitmod, dmgmod);
+        newchar.setAdvantageChance(advChance);
+        newchar.setAdvantageDice(advDice);
+        //newchar.setExtraDamage(10,1);
+        newchar.setExtraDamage(extraDmg, extraDmgChance);
+        myEngine.addPartyMember(newchar);
+        myEngine.theParty.setOpponent(Boss);
+        drawParty();
+        document.getElementById('addPartyForm').style.display = 'none'
+    }
 
-// error handler
-function complain(level, message)
-{
-	console.log(message);
-}
+    // error handler
+    function complain(level, message) {
+        console.log(message);
+    }
 
-function createAttack()
-{
-	var character = myEngine.theParty.members[myEngine.currentChar];
-	var attackName = document.getElementById('attack_name').value;
-	var minDmg = document.getElementById('atk_min_dmg').value;
-	var maxDmg = document.getElementById('atk_max_dmg').value;
-	character.addAttack(attackName, minDmg, maxDmg);
-	drawParty();
-	document.getElementById('addAttackForm').style.display='none'
-}
+    function createAttack() {
+        var character = myEngine.theParty.members[myEngine.currentChar];
+        var attackName = document.getElementById('attack_name').value;
+        var minDmg = document.getElementById('atk_min_dmg').value;
+        var maxDmg = document.getElementById('atk_max_dmg').value;
+        character.addAttack(attackName, minDmg, maxDmg);
+        drawParty();
+        document.getElementById('addAttackForm').style.display = 'none'
+    }
 
-function addAttack(charindex)
-{
-	myEngine.currentChar = charindex;
-	document.getElementById('addAttackForm').style.display='block';
-}
+    function addAttack(charindex) {
+        myEngine.currentChar = charindex;
+        document.getElementById('addAttackForm').style.display = 'block';
+    }
 
-function drawParty()
-{
-	//remove old list
-	var elementToRemove = document.getElementById("charnames");
-	if(elementToRemove)
-	{
-		elementToRemove.parentNode.removeChild(elementToRemove);
-	}
-	
-	var tag = document.createElement("div");
-	tag.setAttribute('id', "charnames");
-	var insertHTML = "";
-	insertHTML += 		'<div class="w3-row-padding  w3-border w3-theme-l1">'+
-						'  <div class="w3-half w3-container">Character Name</div>'+
-						'  <div class="w3-half w3-container">Average Damage Per Round</div>'+
-						'</div>';
-					 
-	for(var i =0; i<myEngine.theParty.members.length; i++)
-	{
-		//html prototype for the character entry
-		var codeblock = '<div class="w3-row-padding __COLOR__ w3-border" onclick="toggleAccordian(\'__ID__\')">'+
-						'  <div class="w3-half w3-container">__NAME__</div>'+
-						'  <div class="w3-half w3-container">__DAMAGE__</div>'+
-						'</div>'+
-						'<div id="__ID__" class="w3-container w3-hide w3-border w3-theme-l3">'+
-						getAttackHTML(i) +
-						'</div>';
-		//plug in real values				
-		codeblock = codeblock.replace(/__NAME__/g,myEngine.theParty.members[i].name);
-		codeblock = codeblock.replace(/__DAMAGE__/g,myEngine.theParty.members[i].getAvgDamage());
-		codeblock = codeblock.replace(/__ID__/g,"Accordian_Section_"+i);
-		//alternating rows
-		var colorstring = "";
-		if(i%2)
-		{
-			colorstring = "w3-theme-l4";
-		}
-		codeblock = codeblock.replace(/__COLOR__/g,colorstring);
-		insertHTML += codeblock;
-		complain(1,codeblock);
-	}
-	insertHTML += 	 '<div class="w3-row-padding  w3-border w3-theme-l2">'+
-						'  <div class="w3-half w3-container">Total:</div>'+
-						'  <div class="w3-half w3-container">'+myEngine.theParty.getAvgDamage()+'</div>'+
-						'</div>';
-	
-	tag.innerHTML += insertHTML;
-	
-	var element = document.getElementById("partycontent");
-	element.appendChild(tag);
-}
+    function drawParty() {
+        //remove old list
+        var elementToRemove = document.getElementById("charnames");
+        if (elementToRemove) {
+            elementToRemove.parentNode.removeChild(elementToRemove);
+        }
 
-// generates the html block for the attacks of a character
-function getAttackHTML(charindex)
-{
-	let attacks = myEngine.theParty.members[charindex].attacks;
-	var returnText = "";
-	for(let i =0; i<attacks.length; i++)
-	{
-		returnText += 	'<div class="w3-row-padding  w3-border">'+
-						'	 <div class="w3-third">'+attacks[i].name+'</div>'+
-						'	 <div class="w3-third">'+attacks[i].minDamage+'</div>'+
-						'	 <div class="w3-third">'+attacks[i].maxDamage+'</div>'+
-						'</div';
-	}
-	returnText +=   '<div>'+
-					'  <button onclick="addAttack('+charindex+')" class="w3-round-xlarge w3-tiny w3-hover-cyan w3-indigo">'+
-					'     Add Attack'+
-					'  </button>'+
-					'</div>';
-	return returnText;
-}
+        var tag = document.createElement("div");
+        tag.setAttribute('id', "charnames");
+        var insertHTML = "";
+        insertHTML += '<div class="w3-row-padding  w3-border w3-theme-l1">' +
+            '  <div class="w3-half w3-container">Character Name</div>' +
+            '  <div class="w3-half w3-container">Average Damage Per Round</div>' +
+            '</div>';
+
+        for (var i = 0; i < myEngine.theParty.members.length; i++) {
+            //html prototype for the character entry
+            var codeblock = '<div class="w3-row-padding __COLOR__ w3-border" onclick="toggleAccordian(\'__ID__\')">' +
+                '  <div class="w3-half w3-container">__NAME__</div>' +
+                '  <div class="w3-half w3-container">__DAMAGE__</div>' +
+                '</div>' +
+                '<div id="__ID__" class="w3-container w3-hide w3-border w3-theme-l3">' +
+                getAttackHTML(i) +
+                '</div>';
+            //plug in real values
+            codeblock = codeblock.replace(/__NAME__/g, myEngine.theParty.members[i].name);
+            codeblock = codeblock.replace(/__DAMAGE__/g, myEngine.theParty.members[i].getAvgDamage());
+            codeblock = codeblock.replace(/__ID__/g, "Accordian_Section_" + i);
+            //alternating rows
+            var colorstring = "";
+            if (i % 2) {
+                colorstring = "w3-theme-l4";
+            }
+            codeblock = codeblock.replace(/__COLOR__/g, colorstring);
+            insertHTML += codeblock;
+            complain(1, codeblock);
+        }
+        insertHTML += '<div class="w3-row-padding  w3-border w3-theme-l2">' +
+            '  <div class="w3-half w3-container">Total:</div>' +
+            '  <div class="w3-half w3-container">' + myEngine.theParty.getAvgDamage() + '</div>' +
+            '</div>';
+
+        tag.innerHTML += insertHTML;
+
+        var element = document.getElementById("partycontent");
+        element.appendChild(tag);
+    }
+
+    // generates the html block for the attacks of a character
+    function getAttackHTML(charindex) {
+        let attacks = myEngine.theParty.members[charindex].attacks;
+        var returnText = "";
+        for (let i = 0; i < attacks.length; i++) {
+            returnText += '<div class="w3-row-padding  w3-border">' +
+                '	 <div class="w3-third">' + attacks[i].name + '</div>' +
+                '	 <div class="w3-third">' + attacks[i].minDamage + '</div>' +
+                '	 <div class="w3-third">' + attacks[i].maxDamage + '</div>' +
+                '</div';
+        }
+        returnText += '<div>' +
+            '  <button onclick="addAttack(' + charindex + ')" class="w3-round-xlarge w3-tiny w3-hover-cyan w3-indigo">' +
+            '     Add Attack' +
+            '  </button>' +
+            '</div>';
+        return returnText;
+    }
 </script>
 
 <body>
 <!-- Header -->
 <header class="w3-container w3-theme w3-padding" id="myHeader">
-  <div class="w3-center">
-  <h4>GM Tools Series</h4>
-  <h1 class="w3-xxxlarge w3-animate-bottom">Encounter Designer</h1>
-  </div>
+    <div class="w3-center">
+        <h4>GM Tools Series</h4>
+        <h1 class="w3-xxxlarge w3-animate-bottom">Encounter Designer</h1>
+    </div>
 </header>
 
 <!-- Encounter Grid -->
 <div class="w3-row-padding">
-  <div class="w3-half w3-container w3-theme-l5">
-    <h2>The Party</h2>
-	<div id="partycontent"></div>
-	<button onclick="document.getElementById('addPartyForm').style.display='block'" class="w3-round-xlarge w3-tiny w3-hover-cyan w3-indigo">Add Character</button>
-  </div>
-  <div class="w3-half w3-container">
-    <h2>Enemies</h2>
-  </div>
+    <div class="w3-half w3-container w3-theme-l5">
+        <h2>The Party</h2>
+        <div id="partycontent"></div>
+        <button onclick="document.getElementById('addPartyForm').style.display='block'"
+                class="w3-round-xlarge w3-tiny w3-hover-cyan w3-indigo">Add Character
+        </button>
+    </div>
+    <div class="w3-half w3-container">
+        <h2>Enemies</h2>
+    </div>
 </div>
 
 <!-- Add Attack Form -->
-<div id="addAttackForm" class="w3-modal">
-  <div class="w3-modal-content w3-card-4">
-    <div class="w3-container">
-      <span onclick="document.getElementById('addAttackForm').style.display='none'"
-      class="w3-button w3-display-topright">&times;</span>
-      <p>&nbsp;</p>
-	  <div class="w3-panel w3-blue-gray" align=center>
-		 <p>New Attack</p>
-	  </div>
-	  <!-- attack name-->
-	  <div class="w3-row-padding">
-		<div class="w3-half">
-		  <label>Attack Name</label>
-		</div>
-		<div class="w3-half">
-		  <input class="w3-input" type="text" id="attack_name">
-		</div>
-	  </div>
-	  <!-- damage -->
-	  <div class="w3-row-padding">
-		<div class="w3-quarter">
-		  <label>Min Dmg</label>
-		</div>
-		<div class="w3-quarter">
-		  <input class="w3-input" type="text" id="atk_min_dmg">
-		</div>
-		<div class="w3-quarter">
-		  <label>Max Dmg</label>
-		</div>
-		<div class="w3-quarter">
-		  <input class="w3-input" type="text" id="atk_max_dmg">
-		</div>
-	  </div>
-	  <div class="w3-panel" align=center>
-		  <button onClick="createAttack()" class="w3-button w3-round-large w3-dark-gray">Add Attack</button>
-      </div>
-    </div>
-  </div>
-</div>
+<div w3-include-html="add_attack_form.html"></div>
 
 <!-- Add to Party Form -->
 <div w3-include-html="character_form.html"></div>
 
 <!-- Footer -->
 <footer class="w3-container w3-theme-dark w3-padding-16">
-  <h3>Footer</h3>
-  <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
-  <div style="position:relative;bottom:55px;" class="w3-tooltip w3-right">
-    <span class="w3-text w3-theme-light w3-padding">Go To Top</span>    
-    <a class="w3-text-white" href="#myHeader"><span class="w3-xlarge">
+    <h3>Footer</h3>
+    <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
+    <div style="position:relative;bottom:55px;" class="w3-tooltip w3-right">
+        <span class="w3-text w3-theme-light w3-padding">Go To Top</span> 
+        <a class="w3-text-white" href="#myHeader"><span class="w3-xlarge">
     <i class="fa fa-chevron-circle-up"></i></span></a>
-  </div>
- </footer>
+    </div>
+</footer>
 <script>
-	includeHTML();
+    includeHTML();
 </script>
 </body>
 </html>
