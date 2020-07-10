@@ -14,6 +14,32 @@
     Boss.setArmorClass(10);
     myEngine.addOpponent(Boss);
 
+    // declare strings for ui elements and then load them in the background
+    var charUiFile = "charUiDiv.html";
+    var charUiDiv = "";
+    var attackUiFile = "attackUiDiv.html";
+    var attackUiDiv = "";
+
+    var myWorker = new Worker('fileContentsThread.js');
+    myWorker.postMessage(charUiFile);
+    myWorker.postMessage(attackUiFile);
+
+    myWorker.onmessage = function(e) {
+        //console.log('Message received from worker'+e.data[0],e.data[1]);
+        switch(e.data[0])
+        {
+            case charUiFile:
+                charUiDiv = e.data[1];
+                break;
+            case attackUiFile:
+                attackUiDiv = e.data[1];
+                break;
+            default:
+                complain(1,"unrecognized file loaded: "+e.data[0]);
+        }
+        //console.log(e.data[1]);
+    }
+
     function includeHTML() {
         var z, i, elmnt, file, xhttp;
         /* Loop through a collection of all HTML elements: */
@@ -125,25 +151,19 @@
 
         for (var i = 0; i < myEngine.theParty.members.length; i++) {
             //html prototype for the character entry
-            var codeblock = '<div class="w3-row-padding __COLOR__ w3-border" onclick="toggleAccordian(\'__ID__\')">' +
-                '  <div class="w3-half w3-container">__NAME__</div>' +
-                '  <div class="w3-half w3-container">__DAMAGE__</div>' +
-                '</div>' +
-                '<div id="__ID__" class="w3-container w3-hide w3-border w3-theme-l3">' +
-                getAttackHTML(i) +
-                '</div>';
-            //plug in real values
-            codeblock = codeblock.replace(/__NAME__/g, myEngine.theParty.members[i].name);
-            codeblock = codeblock.replace(/__DAMAGE__/g, myEngine.theParty.members[i].getAvgDamage());
-            codeblock = codeblock.replace(/__ID__/g, "Accordian_Section_" + i);
+            var codeblock = charUiDiv;
             //alternating rows
             var colorstring = "";
             if (i % 2) {
                 colorstring = "w3-theme-l4";
             }
+            //plug in real values
+            codeblock = codeblock.replace(/__NAME__/g, myEngine.theParty.members[i].name);
+            codeblock = codeblock.replace(/__DAMAGE__/g, myEngine.theParty.members[i].getAvgDamage());
+            codeblock = codeblock.replace(/__ID__/g, "Accordian_Section_" + i);
+            codeblock = codeblock.replace(/__ATK__/g,getAttackHTML(i));
             codeblock = codeblock.replace(/__COLOR__/g, colorstring);
             insertHTML += codeblock;
-            complain(1, codeblock);
         }
         insertHTML += '<div class="w3-row-padding  w3-border w3-theme-l2">' +
             '  <div class="w3-half w3-container">Total:</div>' +
@@ -161,17 +181,18 @@
         let attacks = myEngine.theParty.members[charindex].attacks;
         var returnText = "";
         for (let i = 0; i < attacks.length; i++) {
-            returnText += '<div class="w3-row-padding  w3-border">' +
-                '	 <div class="w3-third">' + attacks[i].name + '</div>' +
-                '	 <div class="w3-third">' + attacks[i].minDamage + '</div>' +
-                '	 <div class="w3-third">' + attacks[i].maxDamage + '</div>' +
-                '</div';
+            var atkText = attackUiDiv;
+            atkText = atkText.replace(/__ATTACK_NAME__/g, attacks[i].name);
+            atkText = atkText.replace(/__MIN_DAMAGE__/g, attacks[i].minDamage);
+            atkText = atkText.replace(/__MAX_DAMAGE__/g, attacks[i].maxDamage);
+            returnText += atkText;
         }
         returnText += '<div>' +
             '  <button onclick="addAttack(' + charindex + ')" class="w3-round-xlarge w3-tiny w3-hover-cyan w3-indigo">' +
             '     Add Attack' +
             '  </button>' +
             '</div>';
+        complain(1, returnText);
         return returnText;
     }
 </script>
